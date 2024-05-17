@@ -3,6 +3,7 @@
 #include "gamestate.h"
 #include "client.h"
 #include "enemy.h"
+#include "caves.h"
 
 int main()
 {
@@ -10,6 +11,7 @@ int main()
     GameState g;
     client c;
     Enemy e;
+    Caves ca;
     std::cout << "Press s to start an adventure! " << std::endl;
     char key;
     int tmp;
@@ -30,7 +32,8 @@ int main()
                 << "Hp: " << listOfHeroes[i].getHp() << "\n"
                 << "Level: "<< listOfHeroes[i].getLevel() <<"\n"
                 << "Xp: " << listOfHeroes[i].getXp() <<"\n"
-                << "Damage: " <<listOfHeroes[i].getDamage() << "\n" << std::endl;
+                << "Damage: " <<listOfHeroes[i].getDamage() << "\n"
+                << "Gold: " << listOfHeroes[i].getGold() << "\n" << std::endl;
 
             }
             std::cout << "Enter hero number to choose them:" << std::endl;
@@ -49,10 +52,9 @@ int main()
     }else{
         std::cout<< "Please follow the suggested format..." << std::endl;
     }
-    // TODO: Add some sort of repeat
     char fe;
     while(fe != 'e'){
-        std::cout << "Press 'f' to fight an enemy or 'e' to save and exit:"<< std::endl;
+        std::cout << "Press 'f' to fight an enemy, press 'q' to go on a quest in a cave, or 'e' to save and exit:"<< std::endl;
         int i=0;
         std::cin>>fe;
         if (fe == 'f'){
@@ -76,7 +78,23 @@ int main()
                 g.fight(h,e);
             }else if(fe == 'e'){
             std::cout << "Saving and exiting" << std::endl;
-        }else{
+        }else if (fe == 'q'){
+            std::cout<< "Choose a cave to enter:"<< std::endl;
+            std::vector<std::pair<std::string, int>> caves = c.printCave();
+            int iterator = 0;
+            for (int i=0; i<caves.size(); ++i){
+                iterator = i+1;
+                std::cout<< iterator<< ": " << caves[i].first <<std::endl;
+            }
+            int num;
+            std::cin>> num;
+            ca.setCaveName(caves[num-1].first);
+            ca.setGold(caves[num-1].second);
+            auto enemies = c.getEnemiesInCave(ca.getCaveName());
+            ca.setListOfEnemies(enemies);
+            ca.enterTheCave(h, g);
+        }
+        else{
             std::cout<< "Please follow the suggested format..." << std::endl;
         }
         //std::cout << "Do you wanna keep fighting? Press f, otherwise press e to save and exit." << std:: endl;

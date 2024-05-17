@@ -7,7 +7,7 @@ class Hero
 {
 public:
     Hero();
-    Hero(std::string name){mName = name; mHp = 10; mLevel = 1; mXp=0; mDamage=2;};
+    Hero(std::string name){mName = name; mHp = 10; mLevel = 1; mXp=0; mDamage=2; mGold=0;};
     void setName (std::string name);
     void setHp (int Hp);
     void setXp (int Xp);
@@ -20,13 +20,15 @@ public:
     int getHp() const;
     int getDamage() const;
     Hero& operator=(const Hero& rhs);
-
+    void setGold(int g);
+    int getGold() const;
 private:
     std::string mName;
     int mXp;
     int mLevel;
     int mHp;
     int mDamage;
+    int mGold;
 
 };
 

@@ -5,6 +5,7 @@
 #include <QSqlDatabase>
 #include "hero.h"
 #include "enemy.h"
+#include <utility>
 
 class client
 {
@@ -15,6 +16,8 @@ public:
     void saveGame(Hero &h);
     void deleteFromTable(Hero h);
     bool doesHeroExist(const QString &heroName);
+    std::vector<Enemy> getEnemiesInCave(std::string caveName);
+    std::vector<std::pair<std::string, int >> printCave();
 };
 
 #endif // CLIENT_H
