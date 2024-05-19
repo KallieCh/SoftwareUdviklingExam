@@ -44,3 +44,13 @@ int Enemy::getDamage() const
 {
     return mDamage;
 }
+
+void Enemy::setElement(std::string elem)
+{
+    mElement = elem;
+}
+
+std::string Enemy::getElement() const
+{
+    return mElement;
+}

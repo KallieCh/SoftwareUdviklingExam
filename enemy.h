@@ -16,12 +16,15 @@ public:
     int getHp() const;
     int getXp() const;
     int getDamage() const;
+    void setElement(std::string elem);
+    std::string getElement() const;
 
 private:
     std::string mName;
     int mHp;
     int mXp;
     int mDamage;
+    std::string mElement;
 };
 
 #endif // ENEMY_H

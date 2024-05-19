@@ -40,6 +40,7 @@ int main()
             int num;
             std::cin >> num;
             h = listOfHeroes[num-1];
+            c.loadHeroMagic(h);
             std::cout << "The character you chose is: " <<h.getName()<<std::endl;
 
         } else if (tmp==2){
@@ -54,7 +55,7 @@ int main()
     }
     char fe;
     while(fe != 'e'){
-        std::cout << "Press 'f' to fight an enemy, press 'q' to go on a quest in a cave, or 'e' to save and exit:"<< std::endl;
+        std::cout << "Press 'f' to fight an enemy, press 'q' to go on a quest in a cave, press 's' to go to the magic strore, or 'e' to save and exit:"<< std::endl;
         int i=0;
         std::cin>>fe;
         if (fe == 'f'){
@@ -66,7 +67,8 @@ int main()
                 std::cout << iterator << ": " << listOfEnemies[i].getName() << "\n"
                 << "Hp: " << listOfEnemies[i].getHp() << "\n"
                 << "Xp: " << listOfEnemies[i].getXp() <<"\n"
-                << "Damage: " <<listOfEnemies[i].getDamage() << "\n" << std::endl;
+                << "Damage: " <<listOfEnemies[i].getDamage() << "\n"
+                << "Element: "<<listOfEnemies[i].getElement() << "\n" << std::endl;
 
 
             }
@@ -75,6 +77,7 @@ int main()
                 e.setHp(listOfEnemies[i-1].getHp());
                 e.setXp(listOfEnemies[i-1].getXp());
                 e.setName(listOfEnemies[i-1].getName());
+                e.setElement(listOfEnemies[i-1].getElement());
                 g.fight(h,e);
             }else if(fe == 'e'){
             std::cout << "Saving and exiting" << std::endl;
@@ -93,6 +96,8 @@ int main()
             auto enemies = c.getEnemiesInCave(ca.getCaveName());
             ca.setListOfEnemies(enemies);
             ca.enterTheCave(h, g);
+        } else if(fe=='s'){
+            g.enterMagicShop(h,c);
         }
         else{
             std::cout<< "Please follow the suggested format..." << std::endl;

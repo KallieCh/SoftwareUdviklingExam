@@ -17,6 +17,7 @@ void Caves::enterTheCave(Hero &h, GameState& gs)
         std::cout << "Congratulations you beat the cave!!!" << std::endl;
         std::cout << "You found " << mGold << " at the end of the cave!!!" << std::endl;
         h.setGold(mGold);
+        h.resetAfterFight();
         mGold = 0;
     }else{
         std::cout << "You perished in the cave!" << std::endl;

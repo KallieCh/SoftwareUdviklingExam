@@ -12,7 +12,8 @@ add_executable(Final main.cpp
     gamestate.h gamestate.cpp
     client.h client.cpp
     enemy.h enemy.cpp
-    caves.h caves.cpp)
+    caves.h caves.cpp
+    magic.h magic.cpp)
 target_link_libraries(Final Qt5::Core Qt5::Sql)
 
 include(GNUInstallDirs)

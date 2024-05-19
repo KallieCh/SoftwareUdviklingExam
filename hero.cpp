@@ -9,6 +9,7 @@ Hero::Hero()
     mDamage = 2;
     mHp = 10;
     mGold =0;
+    mMagicLevel =10;
 }
 
 void Hero::setName(std::string name)
@@ -43,6 +44,7 @@ void Hero::upOnLevel()
         mXp = 0; //xp becomes 0 again to start counting over
         mHp=(mHp+2);
         mDamage++;
+        mMagicLevel=(mMagicLevel+2);
         std::cout << "Level up!!! Hero level: " << this->getLevel() << std::endl;
     }
 
@@ -82,6 +84,7 @@ Hero &Hero::operator=(const Hero& rhs)
         this->mXp = rhs.mXp;
         this->mDamage = rhs.mDamage;
         this->mGold = rhs.mGold;
+        this->mMagicLevel = rhs.mMagicLevel;
     }
 }
 
@@ -93,4 +96,35 @@ void Hero::setGold(int g)
 int Hero::getGold() const
 {
     return mGold;
+}
+
+void Hero::setMagicLevel(int magicl)
+{
+    mMagicLevel = magicl;
+}
+
+int Hero::getMagicLevel() const
+{
+    return mMagicLevel;
+}
+
+void Hero::resetAfterFight()
+{
+    mHp = (10+(getLevel()*2));
+    mMagicLevel = (10+(getLevel()*2));
+}
+
+void Hero::setMagic(std::vector<Magic> mag)
+{
+    mMag = mag;
+}
+
+std::vector<Magic> Hero::getMagic() const
+{
+    return mMag;
+}
+
+void Hero::addToMagVec(Magic &m)
+{
+    mMag.push_back(m);
 }

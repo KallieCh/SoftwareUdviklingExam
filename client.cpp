@@ -54,6 +54,7 @@ std::vector<Enemy> client::printListofEnemies()//print content of enemy table an
         e.setHp(query.value(1).toInt());
         e.setXp(query.value(2).toInt());
         e.setDamage(query.value(3).toInt());
+        e.setElement(query.value(4).toString().toStdString());
         vec.push_back(e);
     }
     return vec;
@@ -110,6 +111,7 @@ void client::saveGame(Hero& h)//check content of function
     query.exec();
     //qDebug() << "Insert succesful";
     }
+    saveHeroMagic(h);
 }
 
 /*void client::deleteFromTable(Hero h)//check conent of function
@@ -171,5 +173,108 @@ std::vector<std::pair<std::string, int>> client::printCave()
         //qDebug() << query.value(0).toString();
     }
     return vec;
+}
+
+void client::getMagic(Hero &h)
+{
+    QSqlQuery query;
+    query.prepare("SELECT magic_name FROM heroes_magic WHERE heroes_name = :name");
+    query.bindValue(":name", QString::fromStdString(h.getName()));
+    query.exec();
+    std::vector<std::string> magicNames;
+    while (query.next()){
+        magicNames.push_back(query.value(0).toString().toStdString());
+    }
+    Magic m;
+    for(auto names : magicNames){
+        query.prepare("SELECT * FROM magic WHERE name = :name");
+        query.bindValue(":name", QString::fromStdString(names));
+        query.exec();
+        while (query.next()){
+            m.setName(query.value(0).toString().toStdString());
+            m.setStrength(query.value(1).toInt());
+            m.setSelfStrength(query.value(2).toInt());
+            m.setCastCost(query.value(3).toInt());
+            m.setElement(query.value(4).toString().toStdString());
+            m.setGoldCost(query.value(5).toInt());
+            m.setRequiredSpell(query.value(6).toString().toStdString());
+            h.addToMagVec(m);
+        }
+    }
+}
+
+bool client::doesHeroHaveMagic(const QString &MagicName, const QString &HeroName)
+{
+    QSqlQuery query;
+    query.prepare("SELECT * FROM heroes_magic WHERE heroes_name = :hname AND magic_name = :mname");
+    query.bindValue(":hname", HeroName);
+    query.bindValue(":mname", MagicName);
+    query.exec();
+    if (query.next()) {
+        //int rowCount = query.value(0).toInt();
+        return true; // Return true if entry exists, false otherwise
+    } else {
+        qDebug() << "Error executing query:" << query.lastError().text();
+        return false;
+    }
+}
+
+void client::saveHeroMagic(Hero &h)
+{
+    QSqlQuery query;
+    auto magic = h.getMagic();
+    for(auto m : magic){
+        if(!doesHeroHaveMagic(QString::fromStdString(m.getName()),QString::fromStdString(h.getName()))){
+            //query.prepare("INSERT INTO heroes_magic (heroes_name, magic_name) "
+            //              "VALUES (:hname, :mname)");
+            query.prepare("INSERT INTO heroes_magic (heroes_name, magic_name) "
+                          "VALUES (:hname, :mname)");
+            query.bindValue(":hname", QString::fromStdString(h.getName()));
+            query.bindValue(":mname", QString::fromStdString(m.getName()));
+            query.exec();
+        }
+    }
+    qDebug() << "Magic saved!";
+}
+
+void client::loadHeroMagic(Hero &h)
+{
+    QSqlQuery query;
+    std::vector<std::string> mnames;
+    query.prepare("SELECT * FROM heroes_magic WHERE heroes_name = :hname");
+    query.bindValue(":hname", QString::fromStdString(h.getName()));
+    query.exec();
+    while(query.next()){
+        mnames.push_back(query.value(1).toString().toStdString());
+    }
+    auto list = printListOfMagic();
+    std::vector<Magic> hmagic;
+    for(int i = 0; i < mnames.size(); ++i){
+        for(int j = 0; j < list.size(); ++j){
+            if(mnames[i] == list[j].getName()){
+                hmagic.push_back(list[j]);
+            }
+        }
+    }
+    h.setMagic(hmagic);
+}
+
+std::vector<Magic> client::printListOfMagic()
+{
+    Magic m;
+    std::vector<Magic> mag;
+    QSqlQuery query;//? the constent of the function
+    query.exec("SELECT * FROM magic"); // tasks er her navnet på en tabel, ikke et schema
+    while (query.next()) {
+        m.setName(query.value(0).toString().toStdString());
+        m.setStrength(query.value(1).toInt());
+        m.setSelfStrength(query.value(2).toInt());
+        m.setCastCost(query.value(3).toInt());
+        m.setElement(query.value(4).toString().toStdString());
+        m.setGoldCost(query.value(5).toInt());
+        m.setRequiredSpell(query.value(6).toString().toStdString());
+        mag.push_back(m);
+    }
+    return mag;
 }
 
